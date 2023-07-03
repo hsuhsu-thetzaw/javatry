@@ -115,7 +115,7 @@ public class Step04MethodTest extends PlainTestCase {
         }
         ++sea;
         sea = inParkCount;
-        log(sea); // your answer? => 
+        log(sea); // your answer? => 100
     }
 
     private void offAnnualPassport(boolean hasAnnualPassport) {
@@ -150,14 +150,38 @@ public class Step04MethodTest extends PlainTestCase {
      * o showSea(): 一つのString引数、戻り値なし、引数をlog()で表示する
      * </pre>
      */
+    private boolean availableLogging = true;
+
     public void test_method_making() {
         // use after making these methods
-        //String replaced = replaceCwithB(replaceAwithB("ABC"));
-        //String sea = quote(replaced, "'");
-        //if (isAvailableLogging()) {
-        //    showSea(sea);
-        //}
+        String replaced = replaceCwithB(replaceAwithB("ABC"));
+        String sea = quote(replaced, "'");
+        if (isAvailableLogging()) {
+            showSea(sea);
+        }
     }
 
     // write methods here
+    private String replaceAwithB(String target) {
+        String replacedString = target.replace("A","B");
+        return replacedString;
+    }
+
+    private String replaceCwithB(String target) {
+        String replacedString = target.replace("C","B");
+        return replacedString;
+    }
+
+    private String quote(String target,String mark) {
+        String quotedString = mark  + target + mark;
+        return quotedString;
+    }
+
+    private boolean isAvailableLogging(){
+        return availableLogging;
+    }
+
+    private void showSea(String sea){
+        log(sea);
+    }
 }
