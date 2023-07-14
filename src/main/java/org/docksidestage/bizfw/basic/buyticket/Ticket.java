@@ -23,34 +23,76 @@ public class Ticket {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    private final int displayPrice; // written on ticket, park guest can watch this
-    private boolean alreadyIn; // true means this ticket is unavailable
+    private final TicketType ticketType;
+    private boolean alreadyIn;
+    private int useTicketCount = 0;
+
+    public enum TicketType {
+        ONEDAY("一日利用", 1, 7400), NIGHT_ONLY_TWODAY("夜間限定2日利用", 2, 7400), TWODAY("二日利用", 2, 13200), FOURDAY("四日利用", 4, 22400);
+        private final String title;
+        private final int days;
+        private final int price;
+
+        private TicketType(String title, int days, int price) {
+            this.title = title;
+            this.days = days;
+            this.price = price;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public int getDays() {
+            return days;
+        }
+
+        public int getPrice() {
+            return price;
+        }
+    }
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public Ticket(int displayPrice) {
-        this.displayPrice = displayPrice;
+    public Ticket(TicketType ticketType) {
+        this.ticketType = ticketType;
     }
 
     // ===================================================================================
     //                                                                             In Park
     //                                                                             =======
     public void doInPark() {
-        if (alreadyIn) {
-            throw new IllegalStateException("Already in park by this ticket: displayedPrice=" + displayPrice);
+        if (useTicketCount >= ticketType.getDays()) {
+            throw new IllegalStateException("Already in park by this ticket: displayedPrice=" + getTicketPrice());
         }
+        useTicketCount++;
         alreadyIn = true;
     }
 
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
-    public int getDisplayPrice() {
-        return displayPrice;
-    }
-
+    /**
+     * @return 一回でも入場したらtrue
+     */
     public boolean isAlreadyIn() {
         return alreadyIn;
+    }
+
+    public TicketType getTicketType() {
+        return ticketType;
+    }
+
+    public String getTicketTitle() {
+        return ticketType.getTitle();
+    }
+
+    public int getTicketDays() {
+        return ticketType.getDays();
+    }
+
+    public int getTicketPrice() {
+        return ticketType.getPrice();
     }
 }

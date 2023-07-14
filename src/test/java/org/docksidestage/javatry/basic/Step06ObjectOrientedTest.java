@@ -43,14 +43,13 @@ public class Step06ObjectOrientedTest extends PlainTestCase {
     //                                        Against Object
     //                                        --------------
     /**
-     * Fix several mistakes (except simulation) in buying one-day passport and in-park process. <br>
-     * (OneDayPassportを買って InPark する処理の中で、(simulationを除いて)間違いがいくつかあるので修正しましょう)
+     * Fix several mistakes in buying one-day passport and in-park process. <br>
+     * (OneDayPassportを買って InPark する処理の中で、間違いが5つあるので修正しましょう)
      */
     public void test_objectOriented_aboutObject_againstObject() {
         //
         // [ticket booth info]
         //
-        // simulation: actually these variables should be more wide scope
         int oneDayPrice = 7400;
         int quantity = 10;
         Integer salesProceeds = null;
@@ -58,22 +57,23 @@ public class Step06ObjectOrientedTest extends PlainTestCase {
         //
         // [buy one-day passport]
         //
-        // simulation: actually this money should be from customer
         int handedMoney = 10000;
         if (quantity <= 0) {
             throw new IllegalStateException("Sold out");
         }
-        --quantity;
         if (handedMoney < oneDayPrice) {
             throw new IllegalStateException("Short money: handedMoney=" + handedMoney);
         }
-        salesProceeds = handedMoney;
+        --quantity;
+        // salesProceeds = handedMoney; //売上げはoneDayPrice
+        salesProceeds = oneDayPrice;
 
         //
         // [ticket info]
         //
-        // simulation: actually these variables should be more wide scope
-        int displayPrice = quantity;
+        // int displayPrice = quantity; //displayPriceはoneDayPrice
+        int displayPrice = oneDayPrice;
+
         boolean alreadyIn = false;
 
         // other processes here...
@@ -83,23 +83,25 @@ public class Step06ObjectOrientedTest extends PlainTestCase {
         //
         // [do in park now!!!]
         //
-        // simulation: actually this process should be called by other trigger
         if (alreadyIn) {
-            throw new IllegalStateException("Already in park by this ticket: displayPrice=" + quantity);
+            throw new IllegalStateException("Already in park by this ticket: displayPrice=" + displayPrice);
         }
         alreadyIn = true;
 
         //
         // [final process]
         //
-        saveBuyingHistory(quantity, displayPrice, salesProceeds, alreadyIn);
+        // saveBuyingHistory(quantity, displayPrice, salesProceeds, alreadyIn); //引数の順番がちゃう
+        saveBuyingHistory(quantity, salesProceeds, displayPrice, alreadyIn);
     }
 
     private void saveBuyingHistory(int quantity, Integer salesProceeds, int displayPrice, boolean alreadyIn) {
         if (alreadyIn) {
-            // simulation: only logging here (normally e.g. DB insert)
-            showTicketBooth(displayPrice, salesProceeds);
-            showYourTicket(quantity, alreadyIn);
+            // only logging here (normally e.g. DB insert)
+            // showTicketBooth(displayPrice, salesProceeds); //渡す引数がちゃう
+            // showYourTicket(quantity, alreadyIn); //渡す引数がちゃう
+            showTicketBooth(quantity, salesProceeds);
+            showYourTicket(displayPrice, alreadyIn);
         }
     }
 
@@ -132,10 +134,12 @@ public class Step06ObjectOrientedTest extends PlainTestCase {
         //
         // [buy one-day passport]
         //
-        // if step05 has been finished, you can use this code by jflute (2019/06/15)
-        //Ticket ticket = booth.buyOneDayPassport(10000);
-        booth.buyOneDayPassport(10000); // as temporary, remove if you finished step05
-        Ticket ticket = new Ticket(7400); // also here
+        // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+        // #fixme you if step05 has been finished, you can use this code by jflute (2019/06/15)
+        // _/_/_/_/_/_/_/_/_/_/
+        Ticket ticket = booth.buyOneDayPassport(10000);
+        // booth.buyOneDayPassport(10000); // as temporary, remove if you finished steo05
+        // Ticket ticket = new Ticket(TicketType.ONEDAY); // also here
 
         // *buyOneDayPassport() has this process:
         //if (quantity <= 0) {
@@ -181,18 +185,12 @@ public class Step06ObjectOrientedTest extends PlainTestCase {
     }
 
     private void doShowTicketBooth(TicketBooth booth) {
-        log("Ticket Booth: quantity={}, salesProceeds={}", booth.getQuantity(), booth.getSalesProceeds());
+        log("Ticket Booth: quantity={}, salesProceeds={}", booth.getOneDayQuantity(), booth.getSalesProceeds());
     }
 
     private void doShowYourTicket(Ticket ticket) {
-        log("Your Ticket: displayPrice={}, alreadyIn={}", ticket.getDisplayPrice(), ticket.isAlreadyIn());
+        log("Your Ticket: displayPrice={}, alreadyIn={}", ticket.getTicketPrice(), ticket.isAlreadyIn());
     }
-
-    // write your memo here:
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-    // what is object?
-    //
-    // _/_/_/_/_/_/_/_/_/_/
 
     // ===================================================================================
     //                                                              Polymorphism Beginning
@@ -205,9 +203,9 @@ public class Step06ObjectOrientedTest extends PlainTestCase {
         Dog dog = new Dog();
         BarkedSound sound = dog.bark();
         String sea = sound.getBarkWord();
-        log(sea); // your answer? => 
+        log(sea); // your answer? => wan
         int land = dog.getHitPoint();
-        log(land); // your answer? => 
+        log(land); // your answer? => 7
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
@@ -215,9 +213,9 @@ public class Step06ObjectOrientedTest extends PlainTestCase {
         Animal animal = new Dog();
         BarkedSound sound = animal.bark();
         String sea = sound.getBarkWord();
-        log(sea); // your answer? => 
+        log(sea); // your answer? => wan
         int land = animal.getHitPoint();
-        log(land); // your answer? => 
+        log(land); // your answer? => 7
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
@@ -225,9 +223,9 @@ public class Step06ObjectOrientedTest extends PlainTestCase {
         Animal animal = createAnyAnimal();
         BarkedSound sound = animal.bark();
         String sea = sound.getBarkWord();
-        log(sea); // your answer? => 
+        log(sea); // your answer? => wan
         int land = animal.getHitPoint();
-        log(land); // your answer? => 
+        log(land); // your answer? => 7
     }
 
     private Animal createAnyAnimal() {
@@ -243,9 +241,9 @@ public class Step06ObjectOrientedTest extends PlainTestCase {
     private void doAnimalSeaLand_for_4th(Animal animal) {
         BarkedSound sound = animal.bark();
         String sea = sound.getBarkWord();
-        log(sea); // your answer? => 
+        log(sea); // your answer? => wan
         int land = animal.getHitPoint();
-        log(land); // your answer? => 
+        log(land); // your answer? => 7
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
@@ -253,31 +251,19 @@ public class Step06ObjectOrientedTest extends PlainTestCase {
         Animal animal = new Cat();
         BarkedSound sound = animal.bark();
         String sea = sound.getBarkWord();
-        log(sea); // your answer? => 
+        log(sea); // your answer? => nya-
         int land = animal.getHitPoint();
-        log(land); // your answer? => 
+        log(land); // your answer? => 5 HP減った時、偶数なら更にHP消費有り
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_objectOriented_polymorphism_6th_overriddenWithoutSuper() {
-        Animal animal = new Zombie();
+        Animal animal = new Zombie(); // 初期HP-1 （Magic Number）　無敵
         BarkedSound sound = animal.bark();
         String sea = sound.getBarkWord();
-        log(sea); // your answer? => 
+        log(sea); // your answer? => uooo
         int land = animal.getHitPoint();
-        log(land); // your answer? => 
-    }
-
-    /**
-     * What is happy if you can assign Dog or Cat instance to Animal variable? <br>
-     * (Animal型の変数に、DogやCatなどのインスタンスを代入できると何が嬉しいのでしょう？)
-     */
-    public void test_objectOriented_polymorphism_7th_whatishappy() {
-        // write your memo here:
-        // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-        // what is happy?
-        //
-        // _/_/_/_/_/_/_/_/_/_/
+        log(land); // your answer? => -1
     }
 
     // ===================================================================================
@@ -287,18 +273,18 @@ public class Step06ObjectOrientedTest extends PlainTestCase {
     public void test_objectOriented_polymorphism_interface_dispatch() {
         Loudable loudable = new Zombie();
         String sea = loudable.soundLoudly();
-        log(sea); // your answer? => 
+        log(sea); // your answer? => uooo
         String land = ((Zombie) loudable).bark().getBarkWord();
-        log(land); // your answer? => 
+        log(land); // your answer? => uooo
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_objectOriented_polymorphism_interface_hierarchy() {
         Loudable loudable = new AlarmClock();
         String sea = loudable.soundLoudly();
-        log(sea); // your answer? => 
+        log(sea); // your answer? => jiri jiri jiri---
         boolean land = loudable instanceof Animal;
-        log(land); // your answer? => 
+        log(land); // your answer? => false
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
@@ -306,29 +292,17 @@ public class Step06ObjectOrientedTest extends PlainTestCase {
         Animal seaAnimal = new Cat();
         Animal landAnimal = new Zombie();
         boolean sea = seaAnimal instanceof FastRunner;
-        log(sea); // your answer? => 
+        log(sea); // your answer? => true
         boolean land = landAnimal instanceof FastRunner;
-        log(land); // your answer? => 
+        log(land); // your answer? => false
     }
 
     /**
-     * Make Dog class implement FastRunner interface. (the method implementation is same as Cat class) <br>
-     * (DogもFastRunnerインターフェースをimplementsしてみましょう (メソッドの実装はCatと同じで))
+     * Make Dog class implement FastRunner interface. (the implementation is same as Cat class) <br>
+     * (DogもFastRunnerインターフェースをimplementsしてみましょう (実装はCatと同じで))
      */
     public void test_objectOriented_polymorphism_interface_runnerImpl() {
         // your confirmation code here
-    }
-
-    /**
-     * What is difference as concept between abstract class and interface? <br>
-     * (抽象クラスとインターフェースの概念的な違いはなんでしょう？)
-     */
-    public void test_objectOriented_polymorphism_interface_whatisdifference() {
-        // write your memo here:
-        // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-        // what is difference?
-        //
-        // _/_/_/_/_/_/_/_/_/_/
     }
 
     // ===================================================================================
@@ -381,35 +355,10 @@ public class Step06ObjectOrientedTest extends PlainTestCase {
     }
 
     /**
-     * Put barking-related classes, such as BarkingProcess and BarkedSound, into sub-package. <br>
-     * (BarkingProcessやBarkedSoundなど、barking関連のクラスをサブパッケージにまとめましょう)
-     * <pre>
-     * e.g.
-     *  objanimal
-     *   |-barking
-     *   |  |-BarkedSound.java
-     *   |  |-BarkingProcess.java
-     *   |-loud
-     *   |-runner
-     *   |-Animal.java
-     *   |-Cat.java
-     *   |-Dog.java
-     *   |-...
-     * </pre>
-     */
-    public void test_objectOriented_writing_withPackageRefactoring() {
-        // your confirmation code here
-    }
-
-    /**
      * Is Zombie correct as sub-class of Animal? Analyze it in thirty seconds. (thinking only) <br>
      * (ゾンビは動物クラスのサブクラスとして適切でしょうか？30秒だけ考えてみましょう (考えるだけでOK))
      */
     public void test_objectOriented_zoo() {
-        // write your memo here:
-        // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-        // is it corrent?
-        //
-        // _/_/_/_/_/_/_/_/_/_/
+        // do nothing here
     }
 }
