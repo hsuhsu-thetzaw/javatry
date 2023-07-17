@@ -16,12 +16,13 @@
 package org.docksidestage.javatry.basic;
 
 import org.docksidestage.bizfw.basic.buyticket.Ticket;
+import org.docksidestage.bizfw.basic.buyticket.Ticket.TicketType;
 import org.docksidestage.bizfw.basic.buyticket.TicketBooth;
 import org.docksidestage.bizfw.basic.buyticket.TicketBooth.TicketShortMoneyException;
 import org.docksidestage.bizfw.basic.buyticket.TicketBuyResult;
-import org.docksidestage.bizfw.basic.buyticket.Ticket.TicketType;
 import org.docksidestage.unit.PlainTestCase;
 
+// TODO harumi javadocのauthor, ぜひお願いします (step5以外でも同じ、着手したものはすべて) by jflute (2023/07/17)
 /**
  * The test of class. <br>
  * Operate exercise as javadoc. If it's question style, write your answer before test execution. <br>
@@ -174,6 +175,8 @@ public class Step05ClassTest extends PlainTestCase {
         TicketBuyResult twoDayPassportResult = booth.buyTwoDayPassport(14000);
         Ticket twoDayPassport = twoDayPassportResult.getTicket();
         log(twoDayPassport.getTicketType());
+        // TODO jflute Goodなので、後はよくあるアンチパターンのエピソードを1on1にて話す (2023/07/17)
+        // あと、enumを導入したタイミングはいつか？を聞いてみたい
         if (twoDayPassport.getTicketType() == TicketType.ONEDAY) {
             log("ONEDAY");
         }
@@ -211,9 +214,14 @@ public class Step05ClassTest extends PlainTestCase {
         log(fourDayPassport.getTicketType());
     }
 
+    // TODO harumi 古いstep5のコードだったので、新しいものに修正しました by jflute (2023/07/17)
+    // 追記: test_class_moreFix_wonder_night()にて「夜しか使えないようにしましょう」を追記
+    // 追加: test_class_moreFix_yourSuperComments()を追加
+    // なんか間違えて問題文を削除しちゃった？ (どこかで古いjavatryでやったのを上書きしたとか？)
+    // https://github.com/hsuhsu-thetzaw/javatry/commit/5f83546c209eec33290a0a7c733cf6c3502fea70#diff-cf1a7f5c4b9d244981e4891d8ce48ddec5ee262efc40f8055c787e60d8eb5530L204
     /**
-     * Fix it to be able to buy night-only two-day passport (price is 7400). <br>
-     * (NightOnlyTwoDayPassport (金額は7400) のチケットも買えるようにしましょう)
+     * Fix it to be able to buy night-only two-day passport (price is 7400), which can be used at only night. <br>
+     * (NightOnlyTwoDayPassport (金額は7400) のチケットも買えるようにしましょう。夜しか使えないようにしましょう)
      */
     public void test_class_moreFix_wonder_night() {
         TicketBooth booth = new TicketBooth();
@@ -227,6 +235,14 @@ public class Step05ClassTest extends PlainTestCase {
      * (その他、気になるところがあったらリファクタリングしてみましょう (例えば、バランスの良いメソッド名や変数名になっていますか？))
      */
     public void test_class_moreFix_yourRefactoring() {
+        // your confirmation code here
+    }
+
+    /**
+     * Write intelligent comments on source code to the main code in buyticket package. <br>
+     * (buyticketパッケージのクラスに、気の利いたコメントを追加してみましょう)
+     */
+    public void test_class_moreFix_yourSuperComments() {
         // your confirmation code here
     }
 }

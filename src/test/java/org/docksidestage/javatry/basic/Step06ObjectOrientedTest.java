@@ -27,6 +27,7 @@ import org.docksidestage.bizfw.basic.objanimal.loud.Loudable;
 import org.docksidestage.bizfw.basic.objanimal.runner.FastRunner;
 import org.docksidestage.unit.PlainTestCase;
 
+// TODO jflute step6が全体的におかしな修正が入ってしまっているので1on1にて要相談 (2023/07/17)
 /**
  * The test of object-oriented. <br>
  * Operate exercise as javadoc. If it's question style, write your answer before test execution. <br>
